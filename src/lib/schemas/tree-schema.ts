@@ -78,6 +78,8 @@ const imagingRecommendationSchema = z.object({
   score: z.number().optional(),
   comments: z.string().optional(),
   commentsAr: z.string().optional(),
+  // Priority is used by the matching logic (1 = primary, 2 = alternative)
+  priority: z.number().optional(),
 });
 
 // Node schemas - no longer have topicId (it's implicit from parent topic)
@@ -99,9 +101,17 @@ const resultNodeSchema = z.object({
   recommendations: z.array(imagingRecommendationSchema),
 });
 
+const noGuidelinesNodeSchema = z.object({
+  id: z.string(),
+  type: z.literal("noGuidelines"),
+  summary: z.string().optional(),
+  summaryAr: z.string().optional(),
+});
+
 const decisionNodeSchema = z.discriminatedUnion("type", [
   questionNodeSchema,
   resultNodeSchema,
+  noGuidelinesNodeSchema,
 ]);
 
 // Panel info schema (single panel per file)
@@ -140,6 +150,7 @@ export {
   topicSchema,
   questionNodeSchema,
   resultNodeSchema,
+  noGuidelinesNodeSchema,
   decisionNodeSchema,
   answerOptionSchema,
   imagingRecommendationSchema,
