@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import { useTreeStore } from "@/lib/store/tree-store";
 import { useUIStore } from "@/lib/store/ui-store";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -103,7 +102,7 @@ export function Sidebar() {
         </div>
 
         {/* Topic list */}
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           <div className="p-2 space-y-0.5">
             {topics.map((topic) => {
               const nodeCount = Object.keys(topic.nodes).length;
@@ -157,7 +156,7 @@ export function Sidebar() {
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
 
       <TopicFormDialog

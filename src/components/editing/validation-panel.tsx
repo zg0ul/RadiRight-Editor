@@ -5,7 +5,6 @@ import { useTreeStore } from "@/lib/store/tree-store";
 import { useUIStore } from "@/lib/store/ui-store";
 import { validateTree, type ValidationIssue } from "@/lib/utils/validation";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertCircle, AlertTriangle } from "lucide-react";
 
 export function ValidationPanel() {
@@ -44,7 +43,7 @@ export function ValidationPanel() {
           </Badge>
         )}
       </div>
-      <ScrollArea className="max-h-48">
+      <div className="max-h-48 overflow-y-auto">
         <div className="p-2 space-y-1">
           {issues.map((issue, i) => (
             <button
@@ -65,7 +64,7 @@ export function ValidationPanel() {
             </button>
           ))}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
