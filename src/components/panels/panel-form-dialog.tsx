@@ -28,16 +28,18 @@ export function PanelFormDialog({ open, onOpenChange }: PanelFormDialogProps) {
   const [descriptionAr, setDescriptionAr] = useState(panelInfo?.descriptionAr || "");
   const [iconName, setIconName] = useState(panelInfo?.iconName || "");
 
-  // Reset form when dialog opens
+  // Reset form when dialog opens without synchronous state updates in the effect body
   useEffect(() => {
-    if (open && panelInfo) {
+    if (!open || !panelInfo) return;
+
+    queueMicrotask(() => {
       setId(panelInfo.id);
       setName(panelInfo.name);
       setNameAr(panelInfo.nameAr);
       setDescription(panelInfo.description || "");
       setDescriptionAr(panelInfo.descriptionAr || "");
       setIconName(panelInfo.iconName || "");
-    }
+    });
   }, [open, panelInfo]);
 
   const handleSave = () => {

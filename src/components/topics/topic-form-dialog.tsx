@@ -73,15 +73,17 @@ export function TopicFormDialog({
   );
   const [iconName, setIconName] = useState<string>(topic?.iconName ?? "");
 
-  // Sync form when dialog opens (create vs edit)
+  // Sync form when dialog opens (create vs edit) without synchronous state updates in the effect body
   useEffect(() => {
-    if (open) {
+    if (!open) return;
+
+    queueMicrotask(() => {
       setName(topic?.name || "");
       setNameAr(topic?.nameAr || "");
       setDescription(topic?.description || "");
       setDescriptionAr(topic?.descriptionAr || "");
       setIconName(topic?.iconName ?? "");
-    }
+    });
   }, [
     open,
     topic?.id,

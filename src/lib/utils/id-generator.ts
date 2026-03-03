@@ -3,13 +3,16 @@ import { nanoid } from "nanoid";
 /**
  * Generate a unique node ID within a topic's nodes.
  * With nested nodes, IDs only need to be unique within the topic.
- * Format: q1, q2, q3... for questions, r1, r2, r_initial... for results
+ * Format:
+ *  - q1, q2, q3... for questions
+ *  - r1, r2, r3... for results
+ *  - n1, n2, n3... for "no guidelines" nodes
  */
 export function generateNodeId(
-  type: "question" | "result",
-  existingNodeIds: string[]
+  type: "question" | "result" | "noGuidelines",
+  existingNodeIds: string[],
 ): string {
-  const typeChar = type === "question" ? "q" : "r";
+  const typeChar = type === "question" ? "q" : type === "result" ? "r" : "n";
 
   // Find highest existing number for this type
   const pattern = new RegExp(`^${typeChar}(\\d+)$`);

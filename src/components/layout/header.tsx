@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Download, Undo2, Redo2 } from "lucide-react";
+import { Download, Undo2, Redo2, FileJson } from "lucide-react";
 
 export function Header() {
   const file = useTreeStore((s) => s.file);
   const fileName = useTreeStore((s) => s.fileName);
   const isDirty = useTreeStore((s) => s.isDirty);
   const getExportData = useTreeStore((s) => s.getExportData);
+  const clearFile = useTreeStore((s) => s.clearFile);
   const undo = useTreeStore((s) => s.undo);
   const redo = useTreeStore((s) => s.redo);
   const canUndo = useTreeStore((s) => s.canUndo);
@@ -20,6 +21,9 @@ export function Header() {
 
   const languageDisplay = useUIStore((s) => s.languageDisplay);
   const setLanguageDisplay = useUIStore((s) => s.setLanguageDisplay);
+  const setSelectedPanel = useUIStore((s) => s.setSelectedPanel);
+  const setSelectedTopic = useUIStore((s) => s.setSelectedTopic);
+  const setSelectedNode = useUIStore((s) => s.setSelectedNode);
 
   const handleExport = () => {
     const data = getExportData();
@@ -32,6 +36,13 @@ export function Header() {
     a.download = fileName || "decision_trees.json";
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleBackToStart = () => {
+    clearFile();
+    setSelectedPanel(null);
+    setSelectedTopic(null);
+    setSelectedNode(null);
   };
 
   return (
@@ -74,6 +85,10 @@ export function Header() {
 
           <Button size="sm" variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-1" /> Export
+          </Button>
+
+          <Button size="sm" variant="ghost" onClick={handleBackToStart}>
+            <FileJson className="h-4 w-4 mr-1" /> New / Import
           </Button>
         </div>
       )}
