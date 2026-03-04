@@ -119,9 +119,6 @@ export interface ImagingRecommendation {
   modalityAr: string;
   procedure: string;
   procedureAr: string;
-  appropriateness: AppropriatenessLevel;
-  radiation: RadiationLevel;
-  score?: number;
   comments?: string;
   commentsAr?: string;
   /**
@@ -131,14 +128,6 @@ export interface ImagingRecommendation {
    */
   priority?: number;
 }
-
-export type AppropriatenessLevel =
-  | "usuallyAppropriate"
-  | "mayBeAppropriate"
-  | "usuallyNotAppropriate"
-  | "noImagingIndicated";
-
-export type RadiationLevel = "none" | "low" | "medium" | "high";
 
 /**
  * The structure of a decision tree JSON file.

@@ -96,7 +96,53 @@ export const useTreeStore = create<TreeState>()(
       getExportData: () => {
         const state = get();
         if (!state.file) return null;
-        return JSON.parse(JSON.stringify(state.file)) as DecisionTreeFile;
+
+        // Deep clone first so we never mutate store state
+        const cloned = JSON.parse(
+          JSON.stringify(state.file),
+        ) as DecisionTreeFile;
+
+        // Clean legacy fields from imaging recommendations before export
+        for (const topic of cloned.topics) {
+          for (const [nodeId, node] of Object.entries(topic.nodes)) {
+            if (node.type === "result") {
+              const resultNode = node as any;
+              if (Array.isArray(resultNode.recommendations)) {
+                resultNode.recommendations = resultNode.recommendations.map(
+                  (rec: any) => {
+                    const {
+                      modality,
+                      modalityAr,
+                      procedure,
+                      procedureAr,
+                      comments,
+                      commentsAr,
+                      priority,
+                    } = rec;
+
+                    const cleaned: any = {
+                      modality,
+                      modalityAr,
+                      procedure,
+                      procedureAr,
+                    };
+
+                    if (comments !== undefined) cleaned.comments = comments;
+                    if (commentsAr !== undefined)
+                      cleaned.commentsAr = commentsAr;
+                    if (priority !== undefined) cleaned.priority = priority;
+
+                    return cleaned;
+                  },
+                );
+              }
+              // write back updated node
+              (topic.nodes as any)[nodeId] = resultNode;
+            }
+          }
+        }
+
+        return cloned;
       },
 
       // Panel info operations (single panel per file)

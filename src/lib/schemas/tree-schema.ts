@@ -59,23 +59,11 @@ const answerOptionSchema = z.object({
   scoreImpact: scoreContributionSchema.optional(),
 });
 
-const appropriatenessLevelSchema = z.enum([
-  "usuallyAppropriate",
-  "mayBeAppropriate",
-  "usuallyNotAppropriate",
-  "noImagingIndicated",
-]);
-
-const radiationLevelSchema = z.enum(["none", "low", "medium", "high"]);
-
 const imagingRecommendationSchema = z.object({
   modality: z.string(),
   modalityAr: z.string(),
   procedure: z.string(),
   procedureAr: z.string(),
-  appropriateness: appropriatenessLevelSchema,
-  radiation: radiationLevelSchema,
-  score: z.number().optional(),
   comments: z.string().optional(),
   commentsAr: z.string().optional(),
   // Priority is used by the matching logic (1 = primary, 2 = alternative)

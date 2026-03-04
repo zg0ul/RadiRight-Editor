@@ -15,11 +15,9 @@ interface ResultEditorProps {
   nodeId: string;
 }
 
-const appropriatenessColors: Record<string, string> = {
-  usuallyAppropriate: "bg-green-100 text-green-800",
-  mayBeAppropriate: "bg-yellow-100 text-yellow-800",
-  usuallyNotAppropriate: "bg-red-100 text-red-800",
-  noImagingIndicated: "bg-gray-100 text-gray-800",
+const priorityColors: Record<number, string> = {
+  1: "bg-green-100 text-green-800",
+  2: "bg-yellow-100 text-yellow-800",
 };
 
 export function ResultEditor({ topicId, nodeId }: ResultEditorProps) {
@@ -46,12 +44,10 @@ export function ResultEditor({ topicId, nodeId }: ResultEditorProps) {
   const handleAddRecommendation = () => {
     const newRec: ImagingRecommendation = {
       modality: "X-ray",
-      modalityAr: "[Arabic: X-ray]",
+      modalityAr: "الأشعة السينية",
       procedure: "New procedure",
       procedureAr: "[Arabic: New procedure]",
-      appropriateness: "usuallyAppropriate",
-      radiation: "low",
-      score: 5,
+      priority: 1,
     };
     updateNode(topicId, nodeId, {
       recommendations: [...node.recommendations, newRec],
@@ -94,14 +90,8 @@ export function ResultEditor({ topicId, nodeId }: ResultEditorProps) {
           <AccordionItem key={index} value={`rec-${index}`} className="border rounded-lg px-3">
             <AccordionTrigger className="text-sm py-2 hover:no-underline">
               <div className="flex items-center gap-2 text-left">
-                <Badge className={`text-[10px] ${appropriatenessColors[rec.appropriateness] || ""}`}>
-                  {rec.appropriateness === "usuallyAppropriate"
-                    ? "UA"
-                    : rec.appropriateness === "mayBeAppropriate"
-                    ? "MBA"
-                    : rec.appropriateness === "usuallyNotAppropriate"
-                    ? "UNA"
-                    : "NI"}
+                <Badge className={`text-[10px] ${priorityColors[rec.priority ?? 1] || ""}`}>
+                  {rec.priority === 2 ? "2nd choice" : "1st choice"}
                 </Badge>
                 <span className="truncate max-w-[180px]">{rec.procedure}</span>
               </div>

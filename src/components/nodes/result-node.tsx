@@ -6,18 +6,9 @@ import { useUIStore } from "@/lib/store/ui-store";
 import type { ResultNode as RNode } from "@/lib/types/decision-tree";
 import { Badge } from "@/components/ui/badge";
 
-const appropriatenessColors: Record<string, string> = {
-  usuallyAppropriate: "border-green-400 bg-green-50",
-  mayBeAppropriate: "border-yellow-400 bg-yellow-50",
-  usuallyNotAppropriate: "border-red-400 bg-red-50",
-  noImagingIndicated: "border-gray-400 bg-gray-50",
-};
-
-const appropriatenessLabels: Record<string, string> = {
-  usuallyAppropriate: "Usually Appropriate",
-  mayBeAppropriate: "May Be Appropriate",
-  usuallyNotAppropriate: "Usually Not Appropriate",
-  noImagingIndicated: "No Imaging",
+const priorityBorderClasses: Record<number, string> = {
+  1: "border-green-400 bg-green-50",
+  2: "border-yellow-400 bg-yellow-50",
 };
 
 function ResultNodeComponent({ data, selected }: NodeProps) {
@@ -29,7 +20,7 @@ function ResultNodeComponent({ data, selected }: NodeProps) {
 
   const topRec = nodeData.recommendations?.[0];
   const borderClass = topRec
-    ? appropriatenessColors[topRec.appropriateness] || "border-gray-300"
+    ? priorityBorderClasses[topRec.priority ?? 1] || "border-gray-300"
     : "border-green-300";
 
   return (
@@ -38,7 +29,7 @@ function ResultNodeComponent({ data, selected }: NodeProps) {
         selected ? "ring-2 ring-green-200" : ""
       }`}
     >
-      <Handle type="target" position={Position.Top} className="!bg-green-400 !w-3 !h-3" />
+      <Handle type="target" position={Position.Top} className="bg-green-400! w-3! h-3!" />
 
       <div className="flex items-center gap-2 mb-1">
         <span className="text-[10px] text-muted-foreground font-mono">{nodeData.id}</span>
@@ -59,7 +50,7 @@ function ResultNodeComponent({ data, selected }: NodeProps) {
         </Badge>
         {topRec && (
           <Badge variant="secondary" className="text-[10px]">
-            {appropriatenessLabels[topRec.appropriateness] || topRec.appropriateness}
+            {topRec.priority === 2 ? "2nd choice" : "1st choice"}
           </Badge>
         )}
       </div>
