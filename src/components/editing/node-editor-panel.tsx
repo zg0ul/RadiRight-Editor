@@ -5,7 +5,6 @@ import { useUIStore } from "@/lib/store/ui-store";
 import { QuestionEditor } from "./question-editor";
 import { ResultEditor } from "./result-editor";
 import { NoGuidelinesEditor } from "./no-guidelines-editor";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
@@ -57,29 +56,42 @@ export function NodeEditorPanel() {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <div className="flex items-center gap-2">
-          <Badge variant={getBadgeVariant(node.type)} className={getBadgeClass(node.type)}>
+          <Badge
+            variant={getBadgeVariant(node.type)}
+            className={getBadgeClass(node.type)}
+          >
             {node.type === "noGuidelines" ? "No Guidelines" : node.type}
           </Badge>
-          <span className="text-xs font-mono text-muted-foreground">{node.id}</span>
+          <span className="text-xs font-mono text-muted-foreground">
+            {node.id}
+          </span>
         </div>
-        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => setSelectedNode(null)}>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-6 w-6"
+          onClick={() => setSelectedNode(null)}
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>
-      <ScrollArea className="flex-1">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="p-4">
           {node.type === "question" ? (
             <QuestionEditor topicId={selectedTopicId} nodeId={selectedNodeId} />
           ) : node.type === "result" ? (
             <ResultEditor topicId={selectedTopicId} nodeId={selectedNodeId} />
           ) : (
-            <NoGuidelinesEditor topicId={selectedTopicId} nodeId={selectedNodeId} />
+            <NoGuidelinesEditor
+              topicId={selectedTopicId}
+              nodeId={selectedNodeId}
+            />
           )}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }

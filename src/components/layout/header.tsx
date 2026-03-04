@@ -24,6 +24,10 @@ export function Header() {
   const setSelectedPanel = useUIStore((s) => s.setSelectedPanel);
   const setSelectedTopic = useUIStore((s) => s.setSelectedTopic);
   const setSelectedNode = useUIStore((s) => s.setSelectedNode);
+  const selectedTopicId = useUIStore((s) => s.selectedTopicId);
+
+  const selectedTopic =
+    file?.topics.find((t) => t.id === selectedTopicId) ?? null;
 
   const handleExport = () => {
     const data = getExportData();
@@ -46,11 +50,11 @@ export function Header() {
   };
 
   return (
-    <header className="h-14 border-b flex items-center justify-between px-4 bg-white shrink-0">
-      <div className="flex items-center gap-3">
+    <header className="h-14 border-b flex items-center justify-between px-4 bg-white shrink-0 gap-4">
+      <div className="flex items-center gap-3 min-w-0">
         <h1 className="text-lg font-bold tracking-tight">RadiRight Editor</h1>
         {fileName && (
-          <Badge variant="outline" className="text-xs font-mono">
+          <Badge variant="outline" className="text-xs font-mono max-w-[200px] truncate">
             {fileName}
           </Badge>
         )}
@@ -61,18 +65,47 @@ export function Header() {
         )}
       </div>
 
+      {file && selectedTopic && (
+        <div className="hidden md:flex flex-col items-center justify-center min-w-0 max-w-md text-center gap-0.5">
+          <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
+            Topic
+          </span>
+          <span className="text-sm font-medium truncate">
+            {selectedTopic.name}
+          </span>
+          <span className="text-[10px] text-muted-foreground font-mono truncate">
+            {selectedTopic.id}
+          </span>
+        </div>
+      )}
+
       {file && (
         <div className="flex items-center gap-2">
-          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={undo} disabled={!canUndo()}>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            onClick={undo}
+            disabled={!canUndo()}
+          >
             <Undo2 className="h-4 w-4" />
           </Button>
-          <Button size="icon" variant="ghost" className="h-8 w-8" onClick={redo} disabled={!canRedo()}>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="h-8 w-8"
+            onClick={redo}
+            disabled={!canRedo()}
+          >
             <Redo2 className="h-4 w-4" />
           </Button>
 
           <Separator orientation="vertical" className="h-6" />
 
-          <Select value={languageDisplay} onValueChange={(v) => setLanguageDisplay(v as LanguageDisplay)}>
+          <Select
+            value={languageDisplay}
+            onValueChange={(v) => setLanguageDisplay(v as LanguageDisplay)}
+          >
             <SelectTrigger className="w-[100px] h-8 text-xs">
               <SelectValue />
             </SelectTrigger>

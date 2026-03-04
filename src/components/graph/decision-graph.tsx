@@ -101,10 +101,11 @@ export function DecisionGraph({ topicId }: DecisionGraphProps) {
 
   const onSelectionChange = useCallback(
     ({ nodes: selectedNodes }: OnSelectionChangeParams) => {
+      // Keep the editor pinned to the last selected node.
+      // We only update when a node is explicitly selected,
+      // and we don't auto-clear selection on empty arrays (which can happen on rerenders).
       if (selectedNodes.length === 1) {
         setSelectedNode(selectedNodes[0].id);
-      } else {
-        setSelectedNode(null);
       }
     },
     [setSelectedNode],

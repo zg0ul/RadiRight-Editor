@@ -4,9 +4,23 @@ import { BilingualInput } from "./bilingual-input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import type { ImagingRecommendation, AppropriatenessLevel, RadiationLevel } from "@/lib/types/decision-tree";
+import type {
+  ImagingRecommendation,
+  AppropriatenessLevel,
+  RadiationLevel,
+} from "@/lib/types/decision-tree";
+import {
+  IMAGING_MODALITY_OPTIONS,
+  findImagingModalityByValue,
+} from "@/lib/constants/imaging-modalities";
 import { Trash2 } from "lucide-react";
 
 interface RecommendationEditorProps {
@@ -15,16 +29,49 @@ interface RecommendationEditorProps {
   onDelete: () => void;
 }
 
-export function RecommendationEditor({ recommendation, onUpdate, onDelete }: RecommendationEditorProps) {
+export function RecommendationEditor({
+  recommendation,
+  onUpdate,
+  onDelete,
+}: RecommendationEditorProps) {
+  const selectedModality = findImagingModalityByValue(recommendation.modality);
+
   return (
     <div className="space-y-3">
-      <BilingualInput
-        label="Modality"
-        valueEn={recommendation.modality}
-        valueAr={recommendation.modalityAr}
-        onChangeEn={(v) => onUpdate({ modality: v })}
-        onChangeAr={(v) => onUpdate({ modalityAr: v })}
-      />
+      <div className="space-y-1">
+        <Label className="text-xs font-medium text-muted-foreground">
+          Modality
+        </Label>
+        <Select
+          value={selectedModality?.code ?? ""}
+          onValueChange={(code) => {
+            const modality = IMAGING_MODALITY_OPTIONS.find(
+              (m) => m.code === code,
+            );
+            if (!modality) return;
+            onUpdate({
+              modality: modality.code,
+              modalityAr: modality.labelAr,
+            });
+          }}
+        >
+          <SelectTrigger className="text-sm">
+            <SelectValue placeholder="Select imaging modality" />
+          </SelectTrigger>
+          <SelectContent>
+            {IMAGING_MODALITY_OPTIONS.map((modality) => (
+              <SelectItem key={modality.code} value={modality.code}>
+                {modality.labelEn} ({modality.code})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {selectedModality && (
+          <p className="text-[11px] text-muted-foreground">
+            {selectedModality.labelAr}
+          </p>
+        )}
+      </div>
 
       <BilingualInput
         label="Procedure"
@@ -36,28 +83,40 @@ export function RecommendationEditor({ recommendation, onUpdate, onDelete }: Rec
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <Label className="text-xs font-medium text-muted-foreground">Appropriateness</Label>
+          <Label className="text-xs font-medium text-muted-foreground">
+            Appropriateness
+          </Label>
           <Select
             value={recommendation.appropriateness}
-            onValueChange={(v) => onUpdate({ appropriateness: v as AppropriatenessLevel })}
+            onValueChange={(v) =>
+              onUpdate({ appropriateness: v as AppropriatenessLevel })
+            }
           >
             <SelectTrigger className="text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="usuallyAppropriate">Usually Appropriate</SelectItem>
+              <SelectItem value="usuallyAppropriate">
+                Usually Appropriate
+              </SelectItem>
               <SelectItem value="mayBeAppropriate">May Be Appropriate</SelectItem>
-              <SelectItem value="usuallyNotAppropriate">Usually Not Appropriate</SelectItem>
+              <SelectItem value="usuallyNotAppropriate">
+                Usually Not Appropriate
+              </SelectItem>
               <SelectItem value="noImagingIndicated">No Imaging</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className="space-y-1">
-          <Label className="text-xs font-medium text-muted-foreground">Radiation</Label>
+          <Label className="text-xs font-medium text-muted-foreground">
+            Radiation
+          </Label>
           <Select
             value={recommendation.radiation}
-            onValueChange={(v) => onUpdate({ radiation: v as RadiationLevel })}
+            onValueChange={(v) =>
+              onUpdate({ radiation: v as RadiationLevel })
+            }
           >
             <SelectTrigger className="text-sm">
               <SelectValue />
@@ -74,19 +133,25 @@ export function RecommendationEditor({ recommendation, onUpdate, onDelete }: Rec
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <Label className="text-xs font-medium text-muted-foreground">Score (1-9)</Label>
+          <Label className="text-xs font-medium text-muted-foreground">
+            Score (1-9)
+          </Label>
           <Input
             type="number"
             min={1}
             max={9}
             value={recommendation.score ?? ""}
-            onChange={(e) => onUpdate({ score: parseInt(e.target.value) || undefined })}
+            onChange={(e) =>
+              onUpdate({ score: parseInt(e.target.value) || undefined })
+            }
             className="text-sm"
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-xs font-medium text-muted-foreground">Priority</Label>
+          <Label className="text-xs font-medium text-muted-foreground">
+            Priority
+          </Label>
           <Select
             value={String(recommendation.priority ?? 1)}
             onValueChange={(v) => onUpdate({ priority: parseInt(v) })}
@@ -95,8 +160,12 @@ export function RecommendationEditor({ recommendation, onUpdate, onDelete }: Rec
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">1 - Indicated (1st choice)</SelectItem>
-              <SelectItem value="2">2 - May be appropriate (2nd choice)</SelectItem>
+              <SelectItem value="1">
+                1 - Indicated (1st choice)
+              </SelectItem>
+              <SelectItem value="2">
+                2 - May be appropriate (2nd choice)
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -113,7 +182,12 @@ export function RecommendationEditor({ recommendation, onUpdate, onDelete }: Rec
 
       <Separator />
 
-      <Button size="sm" variant="ghost" className="text-destructive w-full" onClick={onDelete}>
+      <Button
+        size="sm"
+        variant="ghost"
+        className="text-destructive w-full"
+        onClick={onDelete}
+      >
         <Trash2 className="h-3 w-3 mr-1" /> Remove Recommendation
       </Button>
     </div>
