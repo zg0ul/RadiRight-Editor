@@ -58,6 +58,7 @@ export function Sidebar() {
   const resolveTopicIcon = (panelId: string, iconName?: string | null) => {
     const key = iconName?.toLowerCase();
     switch (key) {
+      case "skeleton":
       case "bone":
         return Bone01Icon;
       case "joint":
@@ -272,7 +273,7 @@ export function Sidebar() {
                           }}
                         >
                           <Pencil className="h-3 w-3" />
-                          Rename topic
+                          Edit topic
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           variant="destructive"

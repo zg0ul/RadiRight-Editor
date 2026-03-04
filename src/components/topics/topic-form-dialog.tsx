@@ -20,10 +20,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Bone01Icon,
+  Bone02Icon,
+  LungsIcon,
+  BrainIcon,
+  HeartCheckIcon,
+  KidneysIcon,
+  LiverIcon,
+  XRayIcon,
+  HandGripIcon,
+  RunningShoesIcon,
+  BodyPartMuscleIcon,
+  Baby01Icon,
+  StethoscopeIcon,
+} from "@hugeicons/core-free-icons";
 import type { Topic, QuestionNode } from "@/lib/types/decision-tree";
 
 // Topic icon names matching Flutter TopicIcon enum (lib/features/assessment/domain/enums/topic_icon.dart)
 const TOPIC_ICON_NAMES = [
+  "skeleton",
   "bone",
   "joint",
   "xray",
@@ -48,6 +65,54 @@ const TOPIC_ICON_NAMES = [
   "baby",
   "medical",
 ] as const;
+
+function getTopicIconComponent(iconName?: string | null) {
+  const key = iconName?.toLowerCase();
+  switch (key) {
+    case "skeleton":
+    case "bone":
+      return Bone01Icon;
+    case "joint":
+      return Bone02Icon;
+    case "xray":
+      return XRayIcon;
+    case "hand":
+    case "wrist":
+      return HandGripIcon;
+    case "foot":
+    case "ankle":
+      return RunningShoesIcon;
+    case "shoulder":
+    case "elbow":
+      return Bone01Icon;
+    case "hip":
+    case "knee":
+      return Bone02Icon;
+    case "spine":
+      return BodyPartMuscleIcon;
+    case "lungs":
+    case "chest":
+      return LungsIcon;
+    case "brain":
+    case "head":
+      return BrainIcon;
+    case "heart":
+      return HeartCheckIcon;
+    case "kidneys":
+    case "abdomen":
+      return KidneysIcon;
+    case "liver":
+      return LiverIcon;
+    case "stomach":
+      return KidneysIcon;
+    case "baby":
+      return Baby01Icon;
+    case "medical":
+      return StethoscopeIcon;
+    default:
+      return undefined;
+  }
+}
 
 interface TopicFormDialogProps {
   open: boolean;
@@ -199,7 +264,7 @@ export function TopicFormDialog({
           </div>
 
           <div className="space-y-1">
-            <Label className="text-xs">Icon Name</Label>
+            <Label className="text-xs">Icon</Label>
             <Select
               value={iconName || "__none__"}
               onValueChange={(v) => setIconName(v === "__none__" ? "" : v)}
@@ -208,12 +273,31 @@ export function TopicFormDialog({
                 <SelectValue placeholder="Select topic icon (optional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__none__">None</SelectItem>
-                {TOPIC_ICON_NAMES.map((icon) => (
-                  <SelectItem key={icon} value={icon}>
-                    {icon}
-                  </SelectItem>
-                ))}
+                <SelectItem value="__none__">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">None</span>
+                  </div>
+                </SelectItem>
+                {TOPIC_ICON_NAMES.map((icon) => {
+                  const Icon = getTopicIconComponent(icon);
+                  return (
+                    <SelectItem key={icon} value={icon}>
+                      <div className="flex items-center gap-2">
+                        {Icon && (
+                          <span className="inline-flex h-5 w-5 items-center justify-center rounded-md border border-border/60 bg-white/60">
+                            <HugeiconsIcon
+                              icon={Icon}
+                              size={14}
+                              color="currentColor"
+                              strokeWidth={1.6}
+                            />
+                          </span>
+                        )}
+                        <span className="text-xs capitalize">{icon}</span>
+                      </div>
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
