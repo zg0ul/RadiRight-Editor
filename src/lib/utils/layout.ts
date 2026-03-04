@@ -1,12 +1,13 @@
 import { Position, type Node, type Edge } from "@xyflow/react";
 
-const NODE_WIDTH = 280;
-const QUESTION_HEIGHT = 100;
-const RESULT_HEIGHT = 120;
+const NODE_WIDTH = 320;
+const QUESTION_HEIGHT = 130;
+const RESULT_HEIGHT = 140;
 
-const HORIZONTAL_SPACING = 120;
-const VERTICAL_SPACING = 180;
-const MARGIN = 50;
+// Wider spacing so edge labels never overlap adjacent nodes
+const HORIZONTAL_SPACING = 180;
+const VERTICAL_SPACING = 260;
+const MARGIN = 60;
 
 /**
  * Custom hierarchical layout for decision tree graphs.

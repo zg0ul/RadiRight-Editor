@@ -4,7 +4,6 @@ import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { useUIStore } from "@/lib/store/ui-store";
 import type { NoGuidelinesNode as NGNode } from "@/lib/types/decision-tree";
-import { Badge } from "@/components/ui/badge";
 import { AlertCircle } from "lucide-react";
 
 function NoGuidelinesNodeComponent({ data, selected }: NodeProps) {
@@ -18,29 +17,36 @@ function NoGuidelinesNodeComponent({ data, selected }: NodeProps) {
 
   return (
     <div
-      className={`px-4 py-3 rounded-lg border-2 shadow-sm min-w-[240px] max-w-[320px] border-amber-400 bg-amber-50 ${
-        selected ? "ring-2 ring-amber-200" : ""
+      className={`rounded-xl border-2 shadow-md min-w-[260px] max-w-[340px] border-amber-400 bg-amber-50 transition-shadow ${
+        selected ? "shadow-lg ring-2 ring-amber-200" : "hover:shadow-md"
       }`}
     >
-      <Handle type="target" position={Position.Top} className="!bg-amber-400 !w-3 !h-3" />
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="bg-amber-500! w-3! h-3! border-2! border-white!"
+      />
 
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-[10px] text-muted-foreground font-mono">{nodeData.id}</span>
+      {/* Header strip */}
+      <div className="px-4 py-2 rounded-t-xl bg-amber-100 border-b border-amber-200 flex items-center gap-2">
+        <AlertCircle className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+        <span className="text-[10px] text-amber-500 font-mono truncate">
+          {nodeData.id}
+        </span>
+        <span className="ml-auto text-[10px] font-semibold text-amber-700 shrink-0">
+          No Guidelines
+        </span>
       </div>
 
-      <div className="flex items-center gap-2 mb-2">
-        <AlertCircle className="h-4 w-4 text-amber-600" />
+      {/* Body */}
+      <div className="px-4 py-3">
         <p
-          className="text-sm font-medium text-amber-800 line-clamp-2"
+          className="text-sm font-semibold text-amber-900 leading-snug"
           dir={languageDisplay === "ar" ? "rtl" : "ltr"}
         >
           {displayText}
         </p>
       </div>
-
-      <Badge variant="outline" className="text-[10px] bg-amber-100 text-amber-800 border-amber-300">
-        No Guidelines
-      </Badge>
     </div>
   );
 }

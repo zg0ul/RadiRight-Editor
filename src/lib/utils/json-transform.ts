@@ -28,34 +28,41 @@ export function topicToGraph(topic: Topic): GraphData {
     if (node.type === "question") {
       const q = node as QuestionNode;
       for (const option of q.options) {
+        // Skip edges with no target (unconnected option handles)
+        if (!option.nextNodeId) continue;
+        const label =
+          option.text.length > 35
+            ? option.text.slice(0, 32) + "…"
+            : option.text;
         edges.push({
           id: `${id}-${option.id}`,
           source: id,
+          sourceHandle: option.id,
           target: option.nextNodeId,
-          label: option.text,
-          type: "smoothstep", // Use smoothstep for better routing around nodes
+          label,
+          type: "smoothstep",
           labelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: 500,
-            fill: "#374151", // Dark gray for better visibility
+            fill: "#374151",
           },
           labelBgStyle: {
             fill: "#ffffff",
-            fillOpacity: 0.9,
+            fillOpacity: 0.95,
             stroke: "#e5e7eb",
             strokeWidth: 1,
           },
-          labelBgPadding: [4, 6], // Padding around label for better readability
+          labelBgPadding: [4, 4] as [number, number],
           data: { option },
           style:
             option.navigationRule?.type === "conditional"
-              ? { strokeDasharray: "5 5", stroke: "#6366f1" }
+              ? { strokeDasharray: "5 5", stroke: "#6366f1", strokeWidth: 2 }
               : option.navigationRule?.type === "computed"
-              ? { strokeDasharray: "2 4", stroke: "#8b5cf6" }
-              : { stroke: "#6b7280" }, // Default gray color
+                ? { strokeDasharray: "2 4", stroke: "#8b5cf6", strokeWidth: 2 }
+                : { stroke: "#6b7280", strokeWidth: 2 },
           animated: !!option.redFlag,
           markerEnd: {
-            type: "arrowclosed",
+            type: "arrowclosed" as const,
             color: "#6b7280",
           },
         });
@@ -90,34 +97,40 @@ export function treeToGraph(
     if (node.type === "question") {
       const q = node as QuestionNode;
       for (const option of q.options) {
+        if (!option.nextNodeId) continue;
+        const label =
+          option.text.length > 35
+            ? option.text.slice(0, 32) + "…"
+            : option.text;
         edges.push({
           id: `${id}-${option.id}`,
           source: id,
+          sourceHandle: option.id,
           target: option.nextNodeId,
-          label: option.text,
-          type: "smoothstep", // Use smoothstep for better routing around nodes
+          label,
+          type: "smoothstep",
           labelStyle: {
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: 500,
-            fill: "#374151", // Dark gray for better visibility
+            fill: "#374151",
           },
           labelBgStyle: {
             fill: "#ffffff",
-            fillOpacity: 0.9,
+            fillOpacity: 0.95,
             stroke: "#e5e7eb",
             strokeWidth: 1,
           },
-          labelBgPadding: [4, 6], // Padding around label for better readability
+          labelBgPadding: [4, 4] as [number, number],
           data: { option },
           style:
             option.navigationRule?.type === "conditional"
-              ? { strokeDasharray: "5 5", stroke: "#6366f1" }
+              ? { strokeDasharray: "5 5", stroke: "#6366f1", strokeWidth: 2 }
               : option.navigationRule?.type === "computed"
-              ? { strokeDasharray: "2 4", stroke: "#8b5cf6" }
-              : { stroke: "#6b7280" }, // Default gray color
+                ? { strokeDasharray: "2 4", stroke: "#8b5cf6", strokeWidth: 2 }
+                : { stroke: "#6b7280", strokeWidth: 2 },
           animated: !!option.redFlag,
           markerEnd: {
-            type: "arrowclosed",
+            type: "arrowclosed" as const,
             color: "#6b7280",
           },
         });
